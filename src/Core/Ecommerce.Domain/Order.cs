@@ -17,7 +17,7 @@ public class Order : BaseDomainModel
         decimal shippingPrice
         )
     {
-        BuyerName = buyerEmail;
+        BuyerName = buyerName;
         BuyerUserName = buyerEmail;
         OrderAddress = orderAddress;
         Subtotal = subtotal;
