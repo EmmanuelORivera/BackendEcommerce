@@ -1,4 +1,12 @@
+using Ecommerce.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<EcommerceDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString"),
+    b => b.MigrationsAssembly(typeof(EcommerceDbContext).Assembly.FullName))
+);
 
 // Add services to the container.
 
@@ -16,7 +24,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
