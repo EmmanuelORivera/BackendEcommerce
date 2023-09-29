@@ -1,38 +1,38 @@
 [
   {
-    "nombre": "Juan Perez",
+    "name": "Juan Perez",
     "rating": 5,
-    "comentario": "It is a very good product",
+    "comment": "It is a very good product",
     "productId": 1
   },
   {
-    "nombre": "Luis Sanchez",
+    "name": "Luis Sanchez",
     "rating": 5,
-    "comentario": "The best purchase I have made",
+    "comment": "The best purchase I have made",
     "productId": 2
   },
   {
-    "nombre": "Felipe Castillo",
+    "name": "Felipe Castillo",
     "rating": 5,
-    "comentario": "It always performs its functions, it never fails",
+    "comment": "It always performs its functions, it never fails",
     "productId": 3
   },
   {
-    "nombre": "Maria Lopez",
+    "name": "Maria Lopez",
     "rating": 5,
-    "comentario": "Fantastic device, exceptional performance",
+    "comment": "Fantastic device, exceptional performance",
     "productId": 4
   },
   {
-    "nombre": "Pedro Santillan",
+    "name": "Pedro Santillan",
     "rating": 5,
-    "comentario": "I got it at a low price",
+    "comment": "I got it at a low price",
     "productId": 5
   },
   {
-    "nombre": "Jeff Smith",
+    "name": "Jeff Smith",
     "rating": 5,
-    "comentario": "I will buy another one again, it is a product with great benefits",
+    "comment": "I will buy another one again, it is a product with great benefits",
     "productId": 6
   }
 ]

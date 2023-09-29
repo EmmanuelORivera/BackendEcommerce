@@ -1,29 +1,29 @@
 [
   {
-    "nombre": "Accessories"
+    "name": "Accessories"
   },
   {
-    "nombre": "Cameras"
+    "name": "Cameras"
   },
   {
-    "nombre": "Books"
+    "name": "Books"
   },
   {
-    "nombre": "Food and Chef"
+    "name": "Food and Chef"
   },
   {
-    "nombre": "Sports"
+    "name": "Sports"
   },
   {
-    "nombre": "Clothes and Fashion"
+    "name": "Clothes and Fashion"
   },
   {
-    "nombre": "House and Decoration"
+    "name": "House and Decoration"
   },
   {
-    "nombre": "Computers"
+    "name": "Computers"
   },
   {
-    "nombre": "Electronics Devices"
+    "name": "Electronics Devices"
   }
 ]
