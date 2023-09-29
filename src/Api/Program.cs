@@ -86,4 +86,25 @@ app.UseCors("CorsPolicy");
 
 app.MapControllers();
 
+//Migration
+using (var scope = app.Services.CreateScope())
+{
+    var service = scope.ServiceProvider;
+    var loggerFactory = service.GetRequiredService<ILoggerFactory>();
+
+    try
+    {
+        var context = service.GetRequiredService<EcommerceDbContext>();
+        var userManager = service.GetRequiredService<UserManager<User>>();
+        var roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
+        await context.Database.MigrateAsync();
+
+        await EcommerceDbContextData.LoadDataAsync(context, userManager, roleManager, loggerFactory);
+    }
+    catch (Exception ex)
+    {
+        var logger = loggerFactory.CreateLogger<Program>();
+        logger.LogError(ex, "Migration error");
+    }
+}
 app.Run();
