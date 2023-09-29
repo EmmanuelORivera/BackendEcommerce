@@ -47,8 +47,8 @@ public class EcommerceDbContextData
                     AvatarUrl = "https://firebasestorage.googleapis.com/v0/b/edificacion-app.appspot.com/o/avatar-1.webp?alt=media&token=58da3007-ff21-494d-a85c-25ffa758ff6d"
                 };
 
-                await userManager.CreateAsync(adminUser, "PasswordJuanPerez123");
-                await userManager.AddToRoleAsync(adminUser, Role.USER);
+                await userManager.CreateAsync(user, "PasswordJuanPerez123");
+                await userManager.AddToRoleAsync(user, Role.USER);
             }
 
             if (!context.Categories!.Any())
