@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Ecommerce.Application;
 using Ecommerce.Application.Contracts.Infrastructure;
 using Ecommerce.Application.Features.Products.Queries.GetProductList;
@@ -36,7 +37,8 @@ builder.Services.AddControllers(opt =>
 {
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
     opt.Filters.Add(new AuthorizeFilter(policy));
-});
+}).AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 // ASP.NET Core Identity
 IdentityBuilder identityBuilder = builder.Services.AddIdentityCore<User>();
