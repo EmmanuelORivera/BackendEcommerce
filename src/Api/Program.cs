@@ -1,6 +1,11 @@
 using System.Text;
+using Ecommerce.Application;
+using Ecommerce.Application.Contracts.Infrastructure;
+using Ecommerce.Application.Features.Products.Queries.GetProductList;
 using Ecommerce.Domain;
+using Ecommerce.Infrastructure.ImageCloudinary;
 using Ecommerce.Infrastructure.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +19,16 @@ using Stripe;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString"),
     b => b.MigrationsAssembly(typeof(EcommerceDbContext).Assembly.FullName))
 );
+
+builder.Services.AddMediatR(typeof(GetProductListHandler).Assembly);
+
+builder.Services.AddScoped<IManageImageService, ManageImageService>();
 
 // Add services to the container.
 
