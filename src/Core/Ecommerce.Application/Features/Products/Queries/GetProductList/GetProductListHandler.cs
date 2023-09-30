@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Ecommerce.Application.Features.Products.Queries.GetProductList;
 
-public class GetProductListHandler : IRequestHandler<GetProductListQuery, List<Product>>
+public class GetProductListHandler : IRequestHandler<GetProductListQuery, IReadOnlyList<Product>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
@@ -14,7 +14,7 @@ public class GetProductListHandler : IRequestHandler<GetProductListQuery, List<P
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<List<Product>> Handle(GetProductListQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Product>> Handle(GetProductListQuery request, CancellationToken cancellationToken)
     {
         var includes = new List<Expression<Func<Product, object>>>
         {
@@ -29,6 +29,6 @@ public class GetProductListHandler : IRequestHandler<GetProductListQuery, List<P
                    true
                );
 
-        return new List<Product>(products);
+        return products;
     }
 }
