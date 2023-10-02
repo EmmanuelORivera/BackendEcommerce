@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Ecommerce.Application.Features.Products.Queries.GetProductById;
 
-public class GetProductByIdQueryHandler : RequestHandler<GetProductByIdQuery, ProductVm>
+public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductVm>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -16,7 +16,7 @@ public class GetProductByIdQueryHandler : RequestHandler<GetProductByIdQuery, Pr
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
-    protected override async ProductVm Handle(GetProductByIdQuery request)
+    public async Task<ProductVm> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         var includes = new List<Expression<Func<Product, object>>>();
         includes.Add(p => p.Images!);
