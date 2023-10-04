@@ -2,6 +2,7 @@ using System.Net;
 using Ecommerce.Application.Contracts.Infrastructure;
 using Ecommerce.Application.Features.Auths.Users.Commands.LoginUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.RegisterUser;
+using Ecommerce.Application.Features.Auths.Users.Commands.ResetPassword;
 using Ecommerce.Application.Features.Auths.Users.Commands.ResetPasswordByToken;
 using Ecommerce.Application.Features.Auths.Users.Commands.SendPassword;
 using Ecommerce.Application.Features.Auths.Users.Vms;
@@ -64,6 +65,13 @@ public class UserController : ControllerBase
     [HttpPost("resetpassword", Name = "ResetPassword")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPasswordByTokenCommand request)
+    {
+        return await _mediator.Send(request);
+    }
+
+    [HttpPost("updatepassword", Name = "UpdatePassword")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<ActionResult<Unit>> UpdatePassword([FromBody] ResetPasswordCommand request)
     {
         return await _mediator.Send(request);
     }
