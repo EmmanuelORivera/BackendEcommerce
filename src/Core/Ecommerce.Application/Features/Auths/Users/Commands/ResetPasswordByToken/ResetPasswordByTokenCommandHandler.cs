@@ -37,6 +37,6 @@ public class ResetPasswordByTokenCommandHandler : IRequestHandler<ResetPasswordB
             throw new Exception("It was an error at the moment of reseting the password");
         }
 
-        return $"The password was succesfully reseted ${request.Email}";
+        return $"The password was succesfully reseted: {request.Email}";
     }
 }
