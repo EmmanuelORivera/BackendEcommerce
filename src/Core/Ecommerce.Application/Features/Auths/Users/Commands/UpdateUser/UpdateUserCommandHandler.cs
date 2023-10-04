@@ -36,7 +36,6 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, AuthR
         updateUser.LastName = request.LastName;
         updateUser.Phone = request.Phone;
         updateUser.AvatarUrl = request.PhotoUrl ?? updateUser.AvatarUrl;
-        updateUser.Email = request.Email; //Keep an eye on this, to see if the business logic allows to change the email.
 
         var result = await _userManager.UpdateAsync(updateUser);
 
