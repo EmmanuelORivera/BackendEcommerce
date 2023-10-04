@@ -44,7 +44,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, AuthR
             throw new Exception("Error trying to update the user");
         }
 
-        var userById = await _userManager.FindByEmailAsync(request.Email!);
+        var userById = await _userManager.FindByEmailAsync(updateUser.Email!); //Keep an eye if there is needed to use the email that comes fom the request.
         var roles = await _userManager.GetRolesAsync(userById!);
 
         return new AuthResponse
