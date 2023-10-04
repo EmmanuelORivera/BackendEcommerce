@@ -5,9 +5,12 @@ using Ecommerce.Application.Features.Auths.Users.Commands.RegisterUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.ResetPassword;
 using Ecommerce.Application.Features.Auths.Users.Commands.ResetPasswordByToken;
 using Ecommerce.Application.Features.Auths.Users.Commands.SendPassword;
+using Ecommerce.Application.Features.Auths.Users.Commands.UpdateAdminUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.UpdateUser;
 using Ecommerce.Application.Features.Auths.Users.Vms;
+using Ecommerce.Application.Models.Authorization;
 using Ecommerce.Application.Models.ImageManagement;
+using Ecommerce.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -92,6 +95,14 @@ public class UserController : ControllerBase
             request.PhotoId = resultImage.PublicId;
             request.PhotoUrl = resultImage.Url;
         }
+        return await _mediator.Send(request);
+    }
+
+    [Authorize(Roles = Role.ADMIN)]
+    [HttpPut("updateAdminUser", Name = "UpdateAdminUser")]
+    [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<User>> UpdateAdminUser([FromBody] UpdateAdminUserCommand request)
+    {
         return await _mediator.Send(request);
     }
 }
