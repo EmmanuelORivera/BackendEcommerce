@@ -1,4 +1,5 @@
 using AutoMapper;
+using Ecommerce.Application.Features.Categories.Vms;
 using Ecommerce.Application.Features.Countries.Vms;
 using Ecommerce.Application.Features.Images.Queries.Vms;
 using Ecommerce.Application.Features.Products.Queries.Vms;
@@ -18,5 +19,6 @@ public class MappingProfile : Profile
         CreateMap<Image, ImageVm>();
         CreateMap<Review, ReviewVm>();
         CreateMap<Country, CountryVm>();
+        CreateMap<Category, CategoryVm>();
     }
 }
