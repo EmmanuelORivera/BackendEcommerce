@@ -9,6 +9,7 @@ using Ecommerce.Application.Features.Auths.Users.Commands.UpdateAdminStatusUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.UpdateAdminUser;
 using Ecommerce.Application.Features.Auths.Users.Commands.UpdateUser;
 using Ecommerce.Application.Features.Auths.Users.Queries.GetByUserId;
+using Ecommerce.Application.Features.Auths.Users.Queries.GetUserByToken;
 using Ecommerce.Application.Features.Auths.Users.Vms;
 using Ecommerce.Application.Models.Authorization;
 using Ecommerce.Application.Models.ImageManagement;
@@ -125,4 +126,11 @@ public class UserController : ControllerBase
         return await _mediator.Send(query);
     }
 
+    [HttpGet("", Name = "CurrentUser")]
+    [ProducesResponseType(typeof(AuthResponse), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<AuthResponse>> CurrentUser()
+    {
+        var query = new GetUserByTokenQuery();
+        return await _mediator.Send(query);
+    }
 }
