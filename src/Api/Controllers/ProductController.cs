@@ -1,9 +1,13 @@
 using System.Net;
+using Ecommerce.Application.Contracts.Infrastructure;
+using Ecommerce.Application.Features.Products.Commands.CreateProduct;
 using Ecommerce.Application.Features.Products.Queries.GetProductById;
 using Ecommerce.Application.Features.Products.Queries.GetProductList;
 using Ecommerce.Application.Features.Products.Queries.PaginationProducts;
 using Ecommerce.Application.Features.Products.Queries.Vms;
 using Ecommerce.Application.Features.Shared.Queries;
+using Ecommerce.Application.Models.Authorization;
+using Ecommerce.Application.Models.ImageManagement;
 using Ecommerce.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,10 +20,11 @@ namespace Ecommerce.Api.Controllers;
 public class ProductController : ControllerBase
 {
     private IMediator _mediator;
-    public ProductController(IMediator mediator)
+    private IManageImageService _manageImageService;
+    public ProductController(IMediator mediator, IManageImageService manageImageService)
     {
         _mediator = mediator;
-
+        _manageImageService = manageImageService;
     }
     [AllowAnonymous]
     [HttpGet("list", Name = "GetProductList")]
@@ -53,6 +58,39 @@ public class ProductController : ControllerBase
         var query = new GetProductByIdQuery(id);
 
         return Ok(await _mediator.Send(query));
+    }
+
+    [Authorize(Roles = Role.ADMIN)]
+    [HttpPost("create", Name = "CreateProduct")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ProductVm>> CreateProduct([FromForm] CreateProductCommand request)
+    {
+        var listPhotoUrls = new List<CreateProductImageCommand>();
+
+        if (request.Photos is not null)
+        {
+            foreach (var photo in request.Photos)
+            {
+                var resultImage = await _manageImageService.UploadImage(
+                    new ImageData
+                    {
+                        ImageStream = photo.OpenReadStream(),
+                        Name = photo.Name
+                    }
+                );
+
+                var fotoCommand = new CreateProductImageCommand
+                {
+                    PublicCode = resultImage.PublicId,
+                    Url = resultImage.Url
+                };
+
+                listPhotoUrls.Add(fotoCommand);
+            }
+            request.ImageUrls = listPhotoUrls;
+        }
+
+        return await _mediator.Send(request);
     }
 
 }
