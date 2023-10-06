@@ -1,6 +1,7 @@
 using System.Net;
 using Ecommerce.Application.Contracts.Infrastructure;
 using Ecommerce.Application.Features.Products.Commands.CreateProduct;
+using Ecommerce.Application.Features.Products.Commands.UpdateProduct;
 using Ecommerce.Application.Features.Products.Queries.GetProductById;
 using Ecommerce.Application.Features.Products.Queries.GetProductList;
 using Ecommerce.Application.Features.Products.Queries.PaginationProducts;
@@ -64,6 +65,39 @@ public class ProductController : ControllerBase
     [HttpPost("create", Name = "CreateProduct")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<ActionResult<ProductVm>> CreateProduct([FromForm] CreateProductCommand request)
+    {
+        var listPhotoUrls = new List<CreateProductImageCommand>();
+
+        if (request.Photos is not null)
+        {
+            foreach (var photo in request.Photos)
+            {
+                var resultImage = await _manageImageService.UploadImage(
+                    new ImageData
+                    {
+                        ImageStream = photo.OpenReadStream(),
+                        Name = photo.Name
+                    }
+                );
+
+                var fotoCommand = new CreateProductImageCommand
+                {
+                    PublicCode = resultImage.PublicId,
+                    Url = resultImage.Url
+                };
+
+                listPhotoUrls.Add(fotoCommand);
+            }
+            request.ImageUrls = listPhotoUrls;
+        }
+
+        return await _mediator.Send(request);
+    }
+
+    [Authorize(Roles = Role.ADMIN)]
+    [HttpPut("update", Name = "UpdateProduct")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ProductVm>> UpdateProduct([FromForm] UpdateProductCommand request)
     {
         var listPhotoUrls = new List<CreateProductImageCommand>();
 
