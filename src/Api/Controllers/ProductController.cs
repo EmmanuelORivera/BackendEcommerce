@@ -1,5 +1,6 @@
 using System.Net;
 using Ecommerce.Application.Contracts.Infrastructure;
+using Ecommerce.Application.Features.Products.Commands.ChangeProductStatus;
 using Ecommerce.Application.Features.Products.Commands.CreateProduct;
 using Ecommerce.Application.Features.Products.Commands.UpdateProduct;
 using Ecommerce.Application.Features.Products.Queries.GetProductById;
@@ -124,6 +125,15 @@ public class ProductController : ControllerBase
             request.ImageUrls = listPhotoUrls;
         }
 
+        return await _mediator.Send(request);
+    }
+
+    [Authorize(Roles = Role.ADMIN)]
+    [HttpPatch("status/{id}", Name = "UpdateProductStatus")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ProductVm>> UpdateProductStatus(int id)
+    {
+        var request = new ChangeProductStatusCommand(id);
         return await _mediator.Send(request);
     }
 
