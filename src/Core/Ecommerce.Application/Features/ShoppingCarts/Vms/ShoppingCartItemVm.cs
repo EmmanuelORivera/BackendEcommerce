@@ -1,6 +1,6 @@
 namespace Ecommerce.Application.Features.ShoppingCarts.Vms;
 
-public class ShoppingCatsItemVm
+public class ShoppingCartItemVm
 {
     public int Id { get; set; }
     public int ProductId { get; set; }

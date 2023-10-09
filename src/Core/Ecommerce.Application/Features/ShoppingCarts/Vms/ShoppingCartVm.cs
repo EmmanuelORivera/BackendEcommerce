@@ -3,7 +3,7 @@ namespace Ecommerce.Application.Features.ShoppingCarts.Vms;
 public class ShoppingCartVm
 {
     public string? ShoppingCartId { get; set; }
-    public List<ShoppingCatsItemVm>? ShoppingCartItems { get; set; }
+    public List<ShoppingCartItemVm>? ShoppingCartItems { get; set; }
     public decimal Total
     {
         get
