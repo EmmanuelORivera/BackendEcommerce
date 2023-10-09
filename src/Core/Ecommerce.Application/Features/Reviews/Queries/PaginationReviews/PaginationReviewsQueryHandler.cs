@@ -23,7 +23,7 @@ public class PaginationReviewsQueryHandler : IRequestHandler<PaginationReviewsQu
         var reviewSpecificationParams = new ReviewSpecificationParams
         {
             PageIndex = request.PageIndex,
-            PageSize = request.PageIndex,
+            PageSize = request.PageSize,
             Search = request.Search,
             Sort = request.Sort,
             ProductId = request.ProductId
