@@ -1,4 +1,5 @@
 using System.Net;
+using Ecommerce.Application.Features.ShoppingCarts.Commands.DeleteShoppingCartItem;
 using Ecommerce.Application.Features.ShoppingCarts.Commands.UpdateShoppingCart;
 using Ecommerce.Application.Features.ShoppingCarts.Queries.GetShoppingCartById;
 using Ecommerce.Application.Features.ShoppingCarts.Vms;
@@ -39,5 +40,14 @@ public class ShoppingCartController : ControllerBase
     {
         request.ShoppingCartId = id;
         return await _mediator.Send(request);
+    }
+
+    [AllowAnonymous]
+    [HttpDelete("item/{id}", Name = "DeleteShoppingCart")]
+    [ProducesResponseType(typeof(ShoppingCartVm), (int)HttpStatusCode.OK)]
+
+    public async Task<ActionResult<ShoppingCartVm>> DeleteShoppingCart(int id)
+    {
+        return await _mediator.Send(new DeleteShoppingCartItemCommand() { Id = id });
     }
 }
