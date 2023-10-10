@@ -29,5 +29,6 @@ public class MappingProfile : Profile
         CreateMap<ShoppingCart, ShoppingCartVm>()
             .ForMember(p => p.ShoppingCartId, x => x.MapFrom(a => a.ShoppingCartMasterId));
         CreateMap<ShoppingCartItem, ShoppingCartItemVm>();
+        CreateMap<ShoppingCartItemVm, ShoppingCartItem>();
     }
 }
