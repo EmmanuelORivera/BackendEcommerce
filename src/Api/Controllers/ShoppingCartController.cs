@@ -1,4 +1,5 @@
 using System.Net;
+using Ecommerce.Application.Features.ShoppingCarts.Commands.UpdateShoppingCart;
 using Ecommerce.Application.Features.ShoppingCarts.Queries.GetShoppingCartById;
 using Ecommerce.Application.Features.ShoppingCarts.Vms;
 using MediatR;
@@ -28,5 +29,15 @@ public class ShoppingCartController : ControllerBase
         var query = new GetShoppingCartByIdQuery(shoppingCartId);
 
         return await _mediator.Send(query);
+    }
+
+    [AllowAnonymous]
+    [HttpPut("{id}", Name = "UpdateShoppingCart")]
+    [ProducesResponseType(typeof(ShoppingCartVm), (int)HttpStatusCode.OK)]
+
+    public async Task<ActionResult<ShoppingCartVm>> UpdateShoppingCart(Guid id, UpdateShoppingCartCommand request)
+    {
+        request.ShoppingCartId = id;
+        return await _mediator.Send(request);
     }
 }
