@@ -7,6 +7,8 @@ using Ecommerce.Application.Persistence;
 using Ecommerce.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Stripe;
 
 namespace Ecommerce.Application.Features.Orders.Commands.CreateOrder;
 
@@ -18,13 +20,13 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
     private readonly UserManager<User> _userManager;
     private readonly StripeSettings _stripeSettings;
 
-    public CreateOrderCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IAuthService authService, UserManager<User> userManager, StripeSettings stripeSettings)
+    public CreateOrderCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IAuthService authService, UserManager<User> userManager, IOptions<StripeSettings> stripeSettings)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _authService = authService;
         _userManager = userManager;
-        _stripeSettings = stripeSettings;
+        _stripeSettings = stripeSettings.Value;
     }
 
     public async Task<OrderVm> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -81,5 +83,71 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
 
         var buyerName = $"{user.Name} {user.LastName}";
         var order = new Order(buyerName, user.UserName!, orderAddress, subtotal, total, tax, shippingPrice);
+
+        await _unitOfWork.Repository<Order>().AddAsync(order);
+
+        var items = new List<OrderItem>();
+
+        foreach (var shoppingElement in shoppingCart.ShoppingCartItems!)
+        {
+            var orderItem = new OrderItem
+            {
+                ProductName = shoppingElement.Product,
+                ProductId = shoppingElement.ProductId,
+                ImageUrl = shoppingElement.Image,
+                Price = shoppingElement.Price,
+                Quantity = shoppingElement.Quantity,
+                OrderId = shoppingElement.Id
+            };
+
+            items.Add(orderItem);
+        }
+
+        _unitOfWork.Repository<OrderItem>().AddRange(items);
+
+        var result = await _unitOfWork.Complete();
+
+        if (result <= 0)
+        {
+            throw new Exception("Error at the moment of create the order");
+        }
+
+        StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
+        var service = new PaymentIntentService();
+        PaymentIntent intent;
+
+        if (string.IsNullOrEmpty(order.PaymentIntentId))
+        {
+            var options = new PaymentIntentCreateOptions
+            {
+                Amount = (long)order.Total,
+                Currency = "usd",
+                PaymentMethodTypes = new List<string> { "card" }
+            };
+
+            intent = await service.CreateAsync(options);
+            order.PaymentIntentId = intent.Id;
+            order.ClientSecret = intent.ClientSecret;
+            order.StripeApiKey = _stripeSettings.PublishableKey;
+        }
+        else
+        {
+            var options = new PaymentIntentUpdateOptions
+            {
+                Amount = (long)order.Total
+            };
+            await service.UpdateAsync(order.PaymentIntentId, options);
+        }
+
+        _unitOfWork.Repository<Order>().UpdateEntity(order);
+
+        var orderResult = await _unitOfWork.Complete();
+
+        if (orderResult <= 0)
+        {
+            throw new Exception("There is an error at the moment of create an intent on stripe");
+        }
+
+        return _mapper.Map<OrderVm>(order);
     }
 }
