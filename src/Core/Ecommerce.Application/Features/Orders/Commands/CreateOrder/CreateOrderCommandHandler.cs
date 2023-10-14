@@ -97,7 +97,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
                 ImageUrl = shoppingElement.Image,
                 Price = shoppingElement.Price,
                 Quantity = shoppingElement.Quantity,
-                OrderId = shoppingElement.Id
+                OrderId = order.Id
             };
 
             items.Add(orderItem);
