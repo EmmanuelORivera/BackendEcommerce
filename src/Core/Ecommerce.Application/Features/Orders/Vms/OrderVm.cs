@@ -10,7 +10,7 @@ public class OrderVm
     public AddressVm? OrderAddress { get; set; }
     public List<OrderItemVm>? OrderItems { get; set; }
     public decimal Subtotal { get; set; }
-    public decimal Tax { get; set; }
+    public decimal Taxes { get; set; }
     public decimal Total { get; set; }
     public decimal ShippingPrice { get; set; }
     public OrderStatus Status { get; set; }
