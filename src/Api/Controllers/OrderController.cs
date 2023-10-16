@@ -5,7 +5,9 @@ using Ecommerce.Application.Features.Addresses.Vms;
 using Ecommerce.Application.Features.Orders.Commands.CreateOrder;
 using Ecommerce.Application.Features.Orders.Commands.UpdateOrder;
 using Ecommerce.Application.Features.Orders.Queries.GetOrdersById;
+using Ecommerce.Application.Features.Orders.Queries.PaginationOrdersQuery;
 using Ecommerce.Application.Features.Orders.Vms;
+using Ecommerce.Application.Features.Shared.Queries;
 using Ecommerce.Application.Models.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -55,5 +57,14 @@ public class OrderController : ControllerBase
         var query = new GetOrdersByIdQuery(id);
 
         return Ok(await _mediator.Send(query));
+    }
+
+    [HttpGet("paginationByUsername", Name = "PaginationOrderByUsername")]
+    [ProducesResponseType(typeof(PaginationVm<OrderVm>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<PaginationVm<OrderVm>>> PaginationOrderByUsername([FromQuery] PaginationOrdersQuery paginationOrdersParams)
+    {
+        paginationOrdersParams.Username = _authService.GetSessionUser();
+        var pagination = await _mediator.Send(paginationOrdersParams);
+        return Ok(pagination);
     }
 }
