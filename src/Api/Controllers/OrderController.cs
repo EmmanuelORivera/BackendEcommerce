@@ -67,4 +67,13 @@ public class OrderController : ControllerBase
         var pagination = await _mediator.Send(paginationOrdersParams);
         return Ok(pagination);
     }
+
+    [Authorize(Roles = Role.ADMIN)]
+    [HttpGet("paginationAdmin", Name = "PaginationOrder")]
+    [ProducesResponseType(typeof(PaginationVm<OrderVm>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<PaginationVm<OrderVm>>> PaginationOrder([FromQuery] PaginationOrdersQuery paginationOrdersParams)
+    {
+        var pagination = await _mediator.Send(paginationOrdersParams);
+        return Ok(pagination);
+    }
 }
