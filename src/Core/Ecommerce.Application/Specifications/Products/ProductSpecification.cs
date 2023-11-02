@@ -14,7 +14,9 @@ public class ProductSpecification : BaseSpecification<Product>
             (!productParams.CategoryId.HasValue || x.CategoryId == productParams.CategoryId) &&
             (!productParams.MinPrice.HasValue || x.Price >= productParams.MinPrice) &&
             (!productParams.MaxPrice.HasValue || x.Price <= productParams.MaxPrice) &&
-            (!productParams.Status.HasValue || x.Status == productParams.Status)
+            (!productParams.Status.HasValue || x.Status == productParams.Status) &&
+            (!productParams.Rating.HasValue || x.Rating == productParams.Rating)
+
         )
     {
         AddInclude(p => p.Reviews!);
